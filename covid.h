@@ -9,7 +9,7 @@ class Estadual
 	public:
 		Estadual (string);
 
-		double getMediaMovel (int,int);
+		double getMediaMovel (double,double);
 		string getEvolucao ();
 		string evolucao;	
 
@@ -59,7 +59,7 @@ class Nacional
 		void setEvolucaoNacional ();
 
 		int calcularMediaMovelNacional (double, double);
-		void getMediaMovelNacional ();
+		double getMediaMovelNacional (double, double);
 
 
 		void setEstado (string);

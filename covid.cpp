@@ -31,7 +31,7 @@ Estadual::Estadual( string nome)
 
 
 //FUNÇAO QUE CALCULA A MEDIA MOVEL ENTRE OS DIAS PEDIDOS
-int Estadual::calcularMediaMovel (int diaInicio, int diaFinal)
+int Estadual::calcularMediaMovel (double diaInicio, double diaFinal)
 {
 	int indexadorEstado, soma, media, mediaMovel;
 
@@ -79,7 +79,7 @@ string Estadual::getEvolucao ()
 	return evolucao;
 }
 
-double Estadual::getMediaMovel ( int diaInicio, int diaFinal )
+double Estadual::getMediaMovel ( double diaInicio, double diaFinal )
 {
 	int mediaDisplay = calcularMediaMovel ( diaInicio, diaFinal);
 	
@@ -170,7 +170,7 @@ void Nacional::getEvolucaoCovid()
 	setEvolucaoNacional();
 }
 
-int Nacional::calcularMediaMovelNacional (int diaInicio, int diaFinal)
+int Nacional::calcularMediaMovelNacional (double diaInicio, double diaFinal)
 {
 	int indexadorEstado, soma, media, mediaMovel;
 
@@ -183,12 +183,13 @@ int Nacional::calcularMediaMovelNacional (int diaInicio, int diaFinal)
 }
 
 
-void Nacional::getMediaMovelNacional ( int diaInicio, int diaFinal )
+double Nacional::getMediaMovelNacional ( double diaInicio, double diaFinal )
 {
-	int mediaDisplay = calcularMediaMovelNacional ( diaInicio, diaFinal);
+	double mediaDisplay = calcularMediaMovelNacional ( diaInicio, diaFinal);
 	
-	printf("A média móvel para o Brasil dos últimos %d dias é %d.\n", (diaFinal + diaInicio + 1), mediaDisplay);
+	//printf("A média móvel para o Brasil dos últimos %d dias é %d.\n", (diaFinal + diaInicio + 1), mediaDisplay);
 
+	return mediaDisplay;
 }
 void Nacional::setEvolucaoNacional ()
 {
