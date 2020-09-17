@@ -7,7 +7,7 @@
 #include <iostream>
 
 #define NUM_DIAS	30
-#define NUM_ESTADOS	26
+#define NUM_ESTADOS	27
 
 using namespace std;
 
@@ -48,24 +48,31 @@ int Estadual::calcularMediaMovel (double diaInicio, double diaFinal)
 }
 
 
+//FUNÇAO QUE EXIBE STRING CARACTERIZANDO A EVOLUÇAO DOS OBITOS
+string Estadual::getEvolucao ()
+{
+	setEvolucao();
+	return evolucao;
+}
+
 //FUNÇAO QUE DEFINE STRING CARACTERIZANDO A EVOLUÇAO DOS OBITOS
 void Estadual::setEvolucao ()
 {
-	int baseComparacao = calcularMediaMovel(obitos.size()-8, obitos.size()-1);
+	int mediaMovelMenos1 = calcularMediaMovel(obitos.size()-8, obitos.size()-1);
 
-	int mediaAtual = calcularMediaMovel(obitos.size()-7, obitos.size());
+	int mediaMovel = calcularMediaMovel(obitos.size()-7, obitos.size());
 
-	float comparador = (mediaAtual / baseComparacao)*100 - 100;
+	float comparador = (mediaMovel / mediaMovelMenos1);
 
 	evolucaoPorcentagem = comparador;
 
-	if (comparador > 15.0 )
+	if (comparador > 1.015 )
 	{
 		evolucao = "ALTA";
 		idEvolucao = 'A';
 	}
 
-	else if (comparador < -15.0)
+	else if (comparador < 0.085)
 	{
 		evolucao = "QUEDA";
 		idEvolucao = 'Q';
@@ -76,13 +83,6 @@ void Estadual::setEvolucao ()
 		idEvolucao = 'E';
 }
 
-//FUNÇAO QUE EXIBE STRING CARACTERIZANDO A EVOLUÇAO DOS OBITOS
-string Estadual::getEvolucao ()
-{
-	setEvolucao();
-	return evolucao;
-}
-
 double Estadual::getMediaMovel ( double diaInicio, double diaFinal )
 {
 	int mediaDisplay = calcularMediaMovel ( diaInicio, diaFinal);
@@ -90,13 +90,18 @@ double Estadual::getMediaMovel ( double diaInicio, double diaFinal )
 	return mediaDisplay;
 }
 
-
 //------------------------------------------------------//
 //--------=-------NACIONAL------------------------------//
 
 
 Nacional::Nacional()
 {
+
+	string evolucao = "0";
+	
+	double obitosAcumulados = 0;
+	float evolucaoPorcentagemNacional = 0;
+
 	int indexadorEstado, indexadorDia;
 	double somaDia;
 	vector <string> Estados_Brasil = 	
@@ -158,8 +163,12 @@ void Nacional::getDadosAcumulados()
 	for(indexadorDia=0 ; indexadorDia < NUM_DIAS; indexadorDia++) //Insere em cada dia do vetor Obitos NAcionais os obitos de todos os estados
 	{
 		for (indexadorEstado = 0; indexadorEstado < estadosBrasil.size() ; indexadorEstado ++)
+		{
+			//cout << obitosNacionais.at(indexadorDia);
 			obitosNacionais.at(indexadorDia) += estadosBrasil.at(indexadorEstado).obitos.at(indexadorDia);
+		}
 	}
+
 	
 	obitosAcumulados = 0;
 
@@ -174,9 +183,9 @@ void Nacional::getEvolucaoCovid()
 
 void Nacional::setEvolucaoNacional ()
 {
-	int baseComparacao = calcularMediaMovelNacional(22, 29);
+	int baseComparacao = calcularMediaMovelNacional(21, 28);
 
-	int mediaAtual = calcularMediaMovelNacional(23, 30);
+	int mediaAtual = calcularMediaMovelNacional(22, 29);
 
 	float comparador = (mediaAtual / baseComparacao)*100 - 100;
 
@@ -198,12 +207,10 @@ int Nacional::calcularMediaMovelNacional (double diaInicio, double diaFinal)
 
 	soma = 0;
 
-	getDadosAcumulados();
-
-	for (indexadorEstado = 0; indexadorEstado < estadosBrasil.size(); indexadorEstado++)
+	for (indexadorEstado = 0; indexadorEstado < estadosBrasil.size(); indexadorEstado++) //Para cada Estado...
 	{
 		for(indexadorDia = diaInicio; indexadorDia < diaFinal; indexadorDia++)
-		soma+= obitosNacionais.at(indexadorEstado-1);
+		soma+= obitosNacionais.at(indexadorEstado); //somar todos os obitos entre diaInicio e diaFinal
 	}
 
 	return mediaMovel = (soma / (diaFinal - diaInicio + 1));
@@ -240,4 +247,3 @@ void Nacional::setMelhorEstado()
 			melhorEstado = estadosBrasil.at(indexadorEstado);
 	}
 }
-

@@ -70,7 +70,7 @@ main( int argc, char *argv[])
 								cout << "\n\n " << Brasil.estadosBrasil.at(indexador).nomeEstado << endl;
 								cout << "Número total de óbitos: " << Brasil.estadosBrasil.at(indexador).totalObitos << endl;
 								cout << "Média móvel dos últimos 7 dias: " << Brasil.estadosBrasil.at(indexador).getMediaMovel(24, 30) << endl;
-								cout << "Evolução do Covid no Estado: " << Brasil.estadosBrasil.at(indexador).getEvolucao() << endl;
+								cout << "Evolução do Covid no Estado: " << Brasil.estadosBrasil.at(indexador).getEvolucao() << "(" << Brasil.estadosBrasil.at(indexador).evolucaoPorcentagem << ")" << endl;
 								break;
 							}
 							case 'b':
@@ -94,6 +94,9 @@ main( int argc, char *argv[])
 
 
 				cout << "ESTADOS EM ALTA:\n";
+
+				for(indexador=0; indexador < 26; indexador++)
+					cout << Brasil.estadosBrasil.at(indexador).evolucaoPorcentagem;
 
 				for (indexador=0; indexador < Brasil.estadosBrasil.size(); indexador++)
 				{
