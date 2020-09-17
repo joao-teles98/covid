@@ -1,121 +1,154 @@
-#include <stdlib.h>
-#include <stdio>
+
+#include <iostream>
 
 #include "covid.h"
 
+#define OK		0;
+
+using namespace std;
+
 int 
 main( int argc, char *argv[])
-{
+{ //INICIO MAIN
 
 	Nacional Brasil;
 
 	char opcao='0';
 
-	printf("Bem-vindo ao Painel de Análise de Casos de COVI-19\n");
-	printf("\n O que deseja fazer?\n\n");
+	cout << "Bem-vindo ao Painel de Análise de Casos de COVI-19\n";
+	cout << "\n O que deseja fazer?\n\n";
 
-	while(opcao != 'q')
-	{
-		printf("a: Exibir evolução em porcentagem do número de óbitos no Brasil/Estados.\n");
-		printf("b: exibir evoluçao dos estados categorizados em ALTA, ESTÁVEIS ou em BAIXA.\n");
-		printf("c: exibir evolução do Brasil categorizada em ALTA, ESTÁVEL ou em BAIXA.\n");
-		printf("d: Exibir estado com maior alta e o com maior queda\n");
-		printf("e: Exibir dados acumulados no Brasil e nos Estados individualmente.\n\n");
-		printf("q: sair do programa\n\n");
+	//while(opcao != 'q')
+	//{ //INICIO LOOP DE MENU
+		cout << "a: Exibir evolução em porcentagem do número de óbitos no Brasil/Estados.\n";
+		cout << "b: exibir evoluçao dos estados categorizados em ALTA, ESTÁVEIS ou em BAIXA.\n";
+		cout << "c: exibir evolução do Brasil categorizada em ALTA, ESTÁVEL ou em BAIXA.\n";
+		cout << "d: Exibir estado com maior alta e o com maior queda\n";
+		cout << "e: Exibir dados acumulados no Brasil e nos Estados individualmente.\n\n";
+		cout << "q: sair do programa\n\n";
 		
-		getline(cin, opcao);
+		cin >> opcao;
 
-		int index;
+		int indexador;
 
 		switch(opcao)
-		{
+		{ //INICIO PEGADA DE OPCOES
 			case 'a':
-				printf("a: Exibir dados do Brasil.\n");
-				printf("b: Exibir dados dos Estados\n");
-				getline(cin, opcao);
+				cout << "a: Exibir dados do Brasil.\n";
+				cout << "b: Exibir dados dos Estados\n";
+				cin >> opcao;
 
 				switch(opcao)
-				{
+				{ // INICIO MENU A
 					case 'a':
 						Brasil.getEvolucaoCovid();
-						printf("Evolução em Porcentagem dos casos do Brasil: %f\n", Brasil.evolucaoPorcentagemNacional);
+						cout << "Evolução em Porcentagem dos casos do Brasil: " << Brasil.evolucaoPorcentagemNacional << "%\n";
+						break;
 					
 					case 'b':
 
-						for ( index =0 , Brasil.estadosBrasil.len(), index++)
-							Brasil.estadosBrasil.at(index).setEvolucao();
+						//for ( indexador =0 ; Brasil.estadosBrasil.size(); indexador++)
+						//	Brasil.estadosBrasil.at(indexador-1).setEvolucao();
 
-						printf("a: Exibir dado de um Estado específico\n");
-						printf("b: Exibir dados de todos os estados\n\n");
+						cout << "a: Exibir dado de um Estado específico\n";
+						cout << "b: Exibir dados de todos os estados\n\n";
 						
-						getline(cin, opcao);
+						cin >> opcao;
 
 						switch (opcao)
-						{
+						{ //INICIO MENU AB
 							case 'a':
-								printf("De qual Estado deseja saber os dados?: ");
+							{
+								string searchEstado;
 
-								getline(cin, searchEstado);
+								cout << "De qual Estado deseja saber os dados?: ";
 
-								for(index=0 , Brasil.estadosBrasil.at(index).nomeEstado == searchEstado , index++)
+								cin >> searchEstado;
+
+								for (indexador=0 ; Brasil.estadosBrasil.at(indexador).nomeEstado == searchEstado ; indexador++)
 									
-								printf("\n\n %s \n", Brasil.estadosBrasil.at(index).nomeEstado);
-								printf("Número total de óbitos: %d\n", Brasil.estadosBrasil.at(index).totalObitos);
-								printf("Média móvel dos últimos 7 dias: %d\n", Brasil.estadosBrasil.at(index).getMediaMovel(24, 30);
-								printf("Evolução do Covid no Estado: %s\n", Brasil.estadosBrasil.at(index).getEvolucaoCovid());
-
-
+								cout << "\n\n " << Brasil.estadosBrasil.at(indexador).nomeEstado << endl;
+								cout << "Número total de óbitos: " << Brasil.estadosBrasil.at(indexador).totalObitos << endl;
+								cout << "Média móvel dos últimos 7 dias: " << Brasil.estadosBrasil.at(indexador).getMediaMovel(24, 30) << endl;
+								cout << "Evolução do Covid no Estado: " << Brasil.estadosBrasil.at(indexador).getEvolucao() << endl;
+								break;
+							}
 							case 'b':
-								for(index=0, index < Brasil.estadosBrasil.len(), index++)
+								for (indexador=0; indexador < Brasil.estadosBrasil.size(); indexador++)
 								{
-									printf("%s: %s\n",Brasil.estadosBrasil.at(index).nomeEstado, Brasil.estadosBrasil.at(index).getEvolucaoCovid());
+									cout << Brasil.estadosBrasil.at(indexador).nomeEstado << ": " << Brasil.estadosBrasil.at(indexador).evolucaoPorcentagem << "%\n";
 								}
-				}
+								break;
+						} //FIM MENU AB
+				} //FIM MENU A
+				
+				break;
 
 			case 'b':
-				printf("ESTADOS EM ALTA:\n");
 
-				for(index=0, index < Brasil.estadosBrasil.len(), index++)
+				for (indexador=0; indexador < Brasil.estadosBrasil.size(); indexador++)
 				{
-					if(Brasil.estadosBrasil.at(index).idEvolucao == 'A')
-						printf("%s;\n", Brasil.estadosBrasil.at(index).nomeEstado);
+					Brasil.estadosBrasil.at(indexador).setEvolucao();
+					cout << Brasil.estadosBrasil.at(indexador).idEvolucao;
 				}
 
-				printf("\nESTADOS EM ESTABILIDADE:\n");
 
-				for(index=0, index < Brasil.estadosBrasil.len(), index++)
+				cout << "ESTADOS EM ALTA:\n";
+
+				for (indexador=0; indexador < Brasil.estadosBrasil.size(); indexador++)
 				{
-					if(Brasil.estadosBrasil.at(index).idEvolucao == 'E')
-						printf("%s;\n", Brasil.estadosBrasil.at(index).nomeEstado);
+					if(Brasil.estadosBrasil.at(indexador).idEvolucao == 'A')
+						cout << Brasil.estadosBrasil.at(indexador).nomeEstado << ";\n";
 				}
 
-				printf("\nESTADOS EM BAIXA:\n");
+				cout << "\nESTADOS EM ESTABILIDADE:\n";
 
-				for(index=0, index < Brasil.estadosBrasil.len(), index++)
+				for (indexador=0; indexador < Brasil.estadosBrasil.size(); indexador++)
 				{
-					if(Brasil.estadosBrasil.at(index).idEvolucao == 'B')
-						printf("%s;\n", Brasil.estadosBrasil.at(index).nomeEstado);
+					if(Brasil.estadosBrasil.at(indexador).idEvolucao == 'E')
+						cout << Brasil.estadosBrasil.at(indexador).nomeEstado << ";\n";
 				}
+
+				cout << "\nESTADOS EM BAIXA:\n";
+
+				for (indexador=0; indexador < Brasil.estadosBrasil.size(); indexador++)
+				{
+					if(Brasil.estadosBrasil.at(indexador).idEvolucao == 'B')
+						cout << Brasil.estadosBrasil.at(indexador).nomeEstado << ";\n";
+				}
+
+				break;
 
 			case 'c':
 				Brasil.getEvolucaoCovid();
-				printf("Estado de evolução do Brasil: %s", Brasil.evolucao);
+				cout << "Estado de evolução do Brasil: " << Brasil.evolucao << endl;
+
+				break;
 
 			case 'd':
 
 				Brasil.setPiorEstado();
 				Brasil.setMelhorEstado();
 
-				printf("Estado com maior queda: %s\n", Brasil.melhorEstado);
-				printf("Estado com maior crescimento: %s\n", Brasil.piorEstado);
+				cout << "Estado com maior queda: " << Brasil.melhorEstado.nomeEstado << endl;
+				cout << "Estado com maior crescimento: " << Brasil.piorEstado.nomeEstado << endl;
+
+				break;
 
 			case 'e':
-				Brasil.getDadosAcumulado()
-				printf("DADOS ACUMULADOS BRASIL: %d ÓBITOS\n", Brasil.obitosAcumulados);
-				
+				Brasil.getDadosAcumulados();
+				cout << "DADOS ACUMULADOS BRASIL: " << Brasil.obitosAcumulados;
 
-			printf("\n\n");
-		}
+				break;	
+
+			case 'q':
+				break;		
+
+			cout << "\n\n";
+			
+		} // FIM DA PEGADA DE OPCOES
+
+	//} //FIM LOOP MENU
 
 		return OK;
-}
+} //FIM MAIN

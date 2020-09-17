@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
 #define NUM_DIAS	30
 #define NUM_ESTADOS	26
@@ -18,10 +19,13 @@ void Estadual::gerarNumeroObitos ()
 	srand(time(NULL));
 	for (indexadorEstado=0; indexadorEstado < NUM_DIAS; indexadorEstado++)
 		obitos.push_back(rand() % 100 + 1);
-		totalObitos += obitos.at(indexadorEstado);
+		totalObitos += obitos.at(indexadorEstado-1);
 }
 
 // public methods
+
+Estadual::Estadual()
+{}
 
 Estadual::Estadual( string nome)
 {
@@ -33,12 +37,12 @@ Estadual::Estadual( string nome)
 //FUNÇAO QUE CALCULA A MEDIA MOVEL ENTRE OS DIAS PEDIDOS
 int Estadual::calcularMediaMovel (double diaInicio, double diaFinal)
 {
-	int indexadorEstado, soma, media, mediaMovel;
+	int indexadorDia, soma, media, mediaMovel;
 
 	soma = 0;
 
-	for (indexadorEstado = diaInicio; indexadorEstado < diaFinal; indexadorEstado++)
-		soma+= obitos.at(indexadorEstado-1);
+	for (indexadorDia = diaInicio; indexadorDia < diaFinal+1; indexadorDia++)
+		soma+= obitos.at(indexadorDia-1);
 
 	return mediaMovel = (soma / (diaFinal - diaInicio + 1));
 }
@@ -151,18 +155,16 @@ void Nacional::setEstado(string nome)
 
 void Nacional::getDadosAcumulados()
 {
-	for(indexadorEstado=0 ; indexadorEstado < estadosBrasil.size() ; indexadorEstado++)
-	{
-		for(indexadorDia = 0 ; indexadorDia < estadosBrasil.at(indexadorEstado).obitos.size(); indexadorDia++)
-			obitosAcumulados += estadosBrasil.at(indexadorEstado).obitos.at(indexadorDia);
-
-	}
-
-	for(indexadorDia=0 ; indexadorDia < NUM_DIAS; indexadorDia++)
+	for(indexadorDia=0 ; indexadorDia < NUM_DIAS; indexadorDia++) //Insere em cada dia do vetor Obitos NAcionais os obitos de todos os estados
 	{
 		for (indexadorEstado = 0; indexadorEstado < estadosBrasil.size() ; indexadorEstado ++)
 			obitosNacionais.at(indexadorDia) += estadosBrasil.at(indexadorEstado).obitos.at(indexadorDia);
 	}
+	
+	obitosAcumulados = 0;
+
+	for(indexadorDia=0; indexadorDia < obitosNacionais.size(); indexadorDia++)		
+		obitosAcumulados += obitosNacionais.at(indexadorDia);
 }
 
 void Nacional::getEvolucaoCovid()
@@ -170,32 +172,11 @@ void Nacional::getEvolucaoCovid()
 	setEvolucaoNacional();
 }
 
-int Nacional::calcularMediaMovelNacional (double diaInicio, double diaFinal)
-{
-	int indexadorEstado, soma, media, mediaMovel;
-
-	soma = 0;
-
-	for (indexadorEstado = diaInicio; indexadorEstado < diaFinal; indexadorEstado++)
-		soma+= obitosNacionais.at(indexadorEstado-1);
-
-	return mediaMovel = (soma / (diaFinal - diaInicio + 1));
-}
-
-
-double Nacional::getMediaMovelNacional ( double diaInicio, double diaFinal )
-{
-	double mediaDisplay = calcularMediaMovelNacional ( diaInicio, diaFinal);
-	
-	//printf("A média móvel para o Brasil dos últimos %d dias é %d.\n", (diaFinal + diaInicio + 1), mediaDisplay);
-
-	return mediaDisplay;
-}
 void Nacional::setEvolucaoNacional ()
 {
-	int baseComparacao = calcularMediaMovelNacional(sizeof(obitosNacionais)-8, sizeof(obitosNacionais)-1);
+	int baseComparacao = calcularMediaMovelNacional(22, 29);
 
-	int mediaAtual = calcularMediaMovelNacional(sizeof(obitosNacionais)-7, sizeof(obitosNacionais));
+	int mediaAtual = calcularMediaMovelNacional(23, 30);
 
 	float comparador = (mediaAtual / baseComparacao)*100 - 100;
 
@@ -209,6 +190,33 @@ void Nacional::setEvolucaoNacional ()
 
 	else
 		evolucao = "ESTÁVEL";
+}
+
+int Nacional::calcularMediaMovelNacional (double diaInicio, double diaFinal)
+{
+	int indexadorEstado, soma, media, mediaMovel;
+
+	soma = 0;
+
+	getDadosAcumulados();
+
+	for (indexadorEstado = 0; indexadorEstado < estadosBrasil.size(); indexadorEstado++)
+	{
+		for(indexadorDia = diaInicio; indexadorDia < diaFinal; indexadorDia++)
+		soma+= obitosNacionais.at(indexadorEstado-1);
+	}
+
+	return mediaMovel = (soma / (diaFinal - diaInicio + 1));
+}
+
+
+double Nacional::getMediaMovelNacional ( double diaInicio, double diaFinal )
+{
+	double mediaDisplay = calcularMediaMovelNacional ( diaInicio, diaFinal);
+	
+	//printf("A média móvel para o Brasil dos últimos %d dias é %d.\n", (diaFinal + diaInicio + 1), mediaDisplay);
+
+	return mediaDisplay;
 }
 
 void Nacional::setPiorEstado()
