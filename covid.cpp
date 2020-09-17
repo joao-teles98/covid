@@ -10,15 +10,15 @@
 
 using namespace std;
 
-int indexador, indexador2;
+int indexadorEstado, indexadorDia;
 
 void Estadual::gerarNumeroObitos ()
 {
-	int indexador;
+	int indexadorEstado;
 	srand(time(NULL));
-	for (indexador=0; indexador < NUM_DIAS; indexador++)
+	for (indexadorEstado=0; indexadorEstado < NUM_DIAS; indexadorEstado++)
 		obitos.push_back(rand() % 100 + 1);
-		totalObitos += obitos.at(indexador);
+		totalObitos += obitos.at(indexadorEstado);
 }
 
 // public methods
@@ -33,12 +33,12 @@ Estadual::Estadual( string nome)
 //FUNÇAO QUE CALCULA A MEDIA MOVEL ENTRE OS DIAS PEDIDOS
 int Estadual::calcularMediaMovel (int diaInicio, int diaFinal)
 {
-	int indexador, soma, media, mediaMovel;
+	int indexadorEstado, soma, media, mediaMovel;
 
 	soma = 0;
 
-	for (indexador = diaInicio; indexador < diaFinal; indexador++)
-		soma+= obitos.at(indexador-1);
+	for (indexadorEstado = diaInicio; indexadorEstado < diaFinal; indexadorEstado++)
+		soma+= obitos.at(indexadorEstado-1);
 
 	return mediaMovel = (soma / (diaFinal - diaInicio + 1));
 }
@@ -93,7 +93,8 @@ double Estadual::getMediaMovel ( int diaInicio, int diaFinal )
 
 Nacional::Nacional()
 {
-	int indexador;
+	int indexadorEstado, indexadorDia;
+	double somaDia;
 	vector <string> Estados_Brasil = 	
 	{
 		"Acre",
@@ -125,18 +126,24 @@ Nacional::Nacional()
 		"Tocantins"	
 	};
 
-	for (indexador = 0 ; indexador < NUM_DIAS ; indexador++)
-		obitosNacionais.push_back()
-
-	for (indexador = 0 ; indexador < NUM_ESTADOS ; indexador++)
+	for (indexadorEstado = 0 ; indexadorEstado < NUM_ESTADOS ; indexadorEstado++)
 	{
-		setEstado(Estados_Brasil.at(indexador));
+		setEstado(Estados_Brasil.at(indexadorEstado));
 	}
 
+	for(indexadorDia=0; indexadorDia < NUM_DIAS; indexadorDia++)
+	{
+		somaDia = 0;
+
+		for(indexadorEstado=0; indexadorEstado < NUM_ESTADOS; indexadorEstado++)
+			somaDia += estadosBrasil.at(indexadorEstado).obitos.at(indexadorDia);
+
+		obitosNacionais.push_back(somaDia);
+	}
 
 }
 
-void Nacional::setEstado(string nome,)
+void Nacional::setEstado(string nome)
 {
 	Estadual estado( nome );
 	estadosBrasil.push_back( estado );
@@ -144,17 +151,17 @@ void Nacional::setEstado(string nome,)
 
 void Nacional::getDadosAcumulados()
 {
-	for(indexador=0 ; indexador < estadosBrasil.size() ; indexador++)
+	for(indexadorEstado=0 ; indexadorEstado < estadosBrasil.size() ; indexadorEstado++)
 	{
-		for(index2 = 0 ; index2 < estadosBrasil.at(indexador).obitos.size(); index2++)
-			obitosAcumulados += estadosBrasil.at(indexador).obitos.at(index2);
+		for(indexadorDia = 0 ; indexadorDia < estadosBrasil.at(indexadorEstado).obitos.size(); indexadorDia++)
+			obitosAcumulados += estadosBrasil.at(indexadorEstado).obitos.at(indexadorDia);
 
 	}
 
-	for(index2=0 ; index2 < estadosBrasil.obitos.size(); index2++)
+	for(indexadorDia=0 ; indexadorDia < NUM_DIAS; indexadorDia++)
 	{
-		for (indexador = 0; indexador < estadosBrasil.size() ; indexador ++)
-			obitosNacionais.at(index2) += estadosBrasil.at(indexador).obitos.at(index2)
+		for (indexadorEstado = 0; indexadorEstado < estadosBrasil.size() ; indexadorEstado ++)
+			obitosNacionais.at(indexadorDia) += estadosBrasil.at(indexadorEstado).obitos.at(indexadorDia);
 	}
 }
 
@@ -165,12 +172,12 @@ void Nacional::getEvolucaoCovid()
 
 int Nacional::calcularMediaMovelNacional (int diaInicio, int diaFinal)
 {
-	int indexador, soma, media, mediaMovel;
+	int indexadorEstado, soma, media, mediaMovel;
 
 	soma = 0;
 
-	for (indexador = diaInicio; indexador < diaFinal; indexador++)
-		soma+= obitosNacionais.at(indexador-1);
+	for (indexadorEstado = diaInicio; indexadorEstado < diaFinal; indexadorEstado++)
+		soma+= obitosNacionais.at(indexadorEstado-1);
 
 	return mediaMovel = (soma / (diaFinal - diaInicio + 1));
 }
@@ -185,9 +192,9 @@ void Nacional::getMediaMovelNacional ( int diaInicio, int diaFinal )
 }
 void Nacional::setEvolucaoNacional ()
 {
-	int baseComparacao = calcularMediaMovelNacional(obitosNacionais.size()-8, obitosNacionais.size()-1, obitosNacionais);
+	int baseComparacao = calcularMediaMovelNacional(sizeof(obitosNacionais)-8, sizeof(obitosNacionais)-1);
 
-	int mediaAtual = calcularMediaMovelNacional(obitosNacionais.size()-7, obitosNacionais.size(), obitosNacionais);
+	int mediaAtual = calcularMediaMovelNacional(sizeof(obitosNacionais)-7, sizeof(obitosNacionais));
 
 	float comparador = (mediaAtual / baseComparacao)*100 - 100;
 
@@ -205,23 +212,23 @@ void Nacional::setEvolucaoNacional ()
 
 void Nacional::setPiorEstado()
 {
-	for (indexador = 0; indexador < estadosBrasil.size(); indexador++)
+	for (indexadorEstado = 0; indexadorEstado < estadosBrasil.size(); indexadorEstado++)
 	{
-		estadosBrasil.at(indexador).setEvolucao();
+		estadosBrasil.at(indexadorEstado).setEvolucao();
 
-		if (estadosBrasil.at(indexador).evolucao > piorEstado.evolucao)
-			piorEstado = estadosBrasil.at(indexador);
+		if (estadosBrasil.at(indexadorEstado).evolucao > piorEstado.evolucao)
+			piorEstado = estadosBrasil.at(indexadorEstado);
 	}
 }
 
 void Nacional::setMelhorEstado()
 {
-	for (indexador = 0 ; indexador < estadosBrasil.size(); indexador++)
+	for (indexadorEstado = 0 ; indexadorEstado < estadosBrasil.size(); indexadorEstado++)
 	{
-		estadosBrasil.at(indexador).setEvolucao();
+		estadosBrasil.at(indexadorEstado).setEvolucao();
 
-		if (estadosBrasil.at(indexador).evolucao < melhorEstado.evolucao)
-			melhorEstado = estadosBrasil.at(indexador);
+		if (estadosBrasil.at(indexadorEstado).evolucao < melhorEstado.evolucao)
+			melhorEstado = estadosBrasil.at(indexadorEstado);
 	}
 }
 

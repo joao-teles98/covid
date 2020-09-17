@@ -7,23 +7,28 @@ using namespace std;
 class Estadual
 {
 	public:
-		Estadual Estadual (string);
+		Estadual (string);
 
 		double getMediaMovel (int,int);
-		string getEvolucao ();	
+		string getEvolucao ();
+		string evolucao;	
+
+		vector <int> obitos;
+
+		void setEvolucao();
 
 	private:
-		string evolucao;
+
 		float evolucaoPorcentagem;
 		char idEvolucao;
-		vector <int> obitos;
+		
 		string nomeEstado;
 		double totalObitos;
 
-		int calcularMediaMovel (int , int);
+		int calcularMediaMovel (double , double);
 		
 		void gerarNumeroObitos ();
-		void setEvolucao();
+		
 };
 
 
@@ -31,14 +36,15 @@ class Nacional
 {
 
 	public:
-		Nacional Nacional ();
+		Nacional ();
 		
 		void getDadosAcumulados ();
 		void getEvolucaoCovid ();
 
+		string evolucao;
+
 	private:
 		vector <Estadual> estadosBrasil;
-		string evolucao;
 		float evolucaoPorcentagemNacional;
 		double obitosAcumulados;
 
@@ -52,7 +58,7 @@ class Nacional
 
 		void setEvolucaoNacional ();
 
-		void calcularMediaMovelNacional ();
+		int calcularMediaMovelNacional (double, double);
 		void getMediaMovelNacional ();
 
 
